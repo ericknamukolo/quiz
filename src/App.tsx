@@ -1,20 +1,67 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import Header from './Header';
 import Main from './components/Main';
-import Questions from './providers/questions';
+import Questions, { ActionType, QuestionStatus } from './providers/questions';
+import Question from './models/question';
+import Loader from './Loader';
+import Error from './Error';
+
+interface State {
+  questions: Question[];
+  status: QuestionStatus;
+}
+
+type Action = { type: ActionType; payload: Question[] };
+
+const initialState = {
+  questions: [],
+  //loading, error, ready,active,finished
+  status: QuestionStatus.loading,
+};
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case ActionType.received:
+      return {
+        questions: action.payload,
+        status: QuestionStatus.ready,
+      };
+
+    case ActionType.failed:
+      return {
+        questions: action.payload,
+        status: QuestionStatus.error,
+      };
+    default:
+      return {
+        questions: action.payload,
+        status: QuestionStatus.error,
+      };
+  }
+}
 
 export default function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   useEffect(() => {
-    Questions.getQuestions().then((res: Questions[]) => {
-      console.log(res);
-    });
-  });
+    Questions.getQuestions()
+      .then((res: Question[]) => {
+        dispatch({ type: ActionType.received, payload: res });
+      })
+      .catch((err) => dispatch({ type: ActionType.failed, payload: [] }));
+  }, []);
 
   return (
     <div className='app'>
       <Header />
       <Main>
-        <h1>Hello world</h1>
+        <h1>
+          {state.status === QuestionStatus.loading ? (
+            <Loader />
+          ) : state.status === QuestionStatus.error ? (
+            <Error />
+          ) : null}
+        </h1>
       </Main>
     </div>
   );

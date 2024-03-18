@@ -1,5 +1,18 @@
 import Question from '../models/question';
 
+export enum QuestionStatus {
+  loading,
+  error,
+  ready,
+  active,
+  finished,
+}
+
+export enum ActionType {
+  received,
+  failed,
+}
+
 export default class Questions {
   static async getQuestions(): Promise<Question[]> {
     try {
@@ -7,8 +20,7 @@ export default class Questions {
       const data = await res.json();
       return data as Question[];
     } catch (e) {
-      alert(e);
+      throw e;
     }
-    return [];
   }
 }
