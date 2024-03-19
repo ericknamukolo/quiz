@@ -5,6 +5,7 @@ import Questions, { ActionType, QuestionStatus } from './providers/questions';
 import Question from './models/question';
 import Loader from './Loader';
 import Error from './Error';
+import StartScreen from './components/StartScreen';
 
 interface State {
   questions: Question[];
@@ -60,7 +61,9 @@ export default function App() {
             <Loader />
           ) : state.status === QuestionStatus.error ? (
             <Error />
-          ) : null}
+          ) : (
+            <StartScreen numOfQuestions={state.questions.length} />
+          )}
         </h1>
       </Main>
     </div>
