@@ -11,6 +11,7 @@ export enum QuestionStatus {
 export enum ActionType {
   received,
   failed,
+  start,
 }
 
 export default class Questions {

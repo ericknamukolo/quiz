@@ -6,6 +6,7 @@ import Question from './models/question';
 import Loader from './Loader';
 import Error from './Error';
 import StartScreen from './components/StartScreen';
+import QuestionComp from './components/Question';
 
 interface State {
   questions: Question[];
@@ -33,6 +34,11 @@ function reducer(state: State, action: Action): State {
         questions: action.payload,
         status: QuestionStatus.error,
       };
+    case ActionType.start:
+      return {
+        questions: action.payload,
+        status: QuestionStatus.active,
+      };
     default:
       return {
         questions: action.payload,
@@ -52,19 +58,23 @@ export default function App() {
       .catch((err) => dispatch({ type: ActionType.failed, payload: [] }));
   }, []);
 
+  function startQuiz() {
+    dispatch({ type: ActionType.start, payload: state.questions });
+  }
+
   return (
     <div className='app'>
       <Header />
       <Main>
-        <h1>
-          {state.status === QuestionStatus.loading ? (
-            <Loader />
-          ) : state.status === QuestionStatus.error ? (
-            <Error />
-          ) : (
-            <StartScreen numOfQuestions={state.questions.length} />
-          )}
-        </h1>
+        {state.status === QuestionStatus.loading && <Loader />}
+        {state.status === QuestionStatus.error && <Error />}
+        {state.status === QuestionStatus.ready && (
+          <StartScreen
+            numOfQuestions={state.questions.length}
+            onStart={startQuiz}
+          />
+        )}
+        {state.status === QuestionStatus.active && <QuestionComp />}
       </Main>
     </div>
   );
