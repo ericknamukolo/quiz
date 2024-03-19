@@ -6,49 +6,61 @@ import Question from './models/question';
 import Loader from './Loader';
 import Error from './Error';
 import StartScreen from './components/StartScreen';
-import QuestionComp from './components/Question';
+import QuestionComp from './components/question/Question';
 
-interface State {
+type State = {
   questions: Question[];
   status: QuestionStatus;
-}
+  index: number;
+};
 
 type Action = { type: ActionType; payload: Question[] };
 
 const initialState = {
   questions: [],
-  //loading, error, ready,active,finished
   status: QuestionStatus.loading,
+  index: 0,
 };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case ActionType.received:
       return {
+        ...state,
         questions: action.payload,
         status: QuestionStatus.ready,
+        index: 0,
       };
 
     case ActionType.failed:
       return {
+        ...state,
         questions: action.payload,
         status: QuestionStatus.error,
+        index: 0,
       };
     case ActionType.start:
       return {
+        ...state,
         questions: action.payload,
         status: QuestionStatus.active,
+        index: 0,
       };
     default:
       return {
+        ...state,
         questions: action.payload,
         status: QuestionStatus.error,
+        index: 0,
       };
   }
 }
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
   useEffect(() => {
     Questions.getQuestions()
@@ -59,22 +71,21 @@ export default function App() {
   }, []);
 
   function startQuiz() {
-    dispatch({ type: ActionType.start, payload: state.questions });
+    dispatch({ type: ActionType.start, payload: questions });
   }
 
   return (
     <div className='app'>
       <Header />
       <Main>
-        {state.status === QuestionStatus.loading && <Loader />}
-        {state.status === QuestionStatus.error && <Error />}
-        {state.status === QuestionStatus.ready && (
-          <StartScreen
-            numOfQuestions={state.questions.length}
-            onStart={startQuiz}
-          />
+        {status === QuestionStatus.loading && <Loader />}
+        {status === QuestionStatus.error && <Error />}
+        {status === QuestionStatus.ready && (
+          <StartScreen numOfQuestions={questions.length} onStart={startQuiz} />
         )}
-        {state.status === QuestionStatus.active && <QuestionComp />}
+        {status === QuestionStatus.active && (
+          <QuestionComp question={questions[index]} />
+        )}
       </Main>
     </div>
   );

@@ -1,0 +1,13 @@
+import Question from '../../models/question';
+
+export default function Options({ question }: { question: Question }) {
+  return (
+    <div className='options'>
+      {question.options.map((option) => (
+        <button className='btn btn-option' key={option}>
+          {option}
+        </button>
+      ))}
+    </div>
+  );
+}
