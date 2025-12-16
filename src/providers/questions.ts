@@ -1,17 +1,11 @@
 import Question from '../models/question';
 
-export enum QuestionStatus {
+export enum Status {
+  initial,
   loading,
+  complete,
   error,
-  ready,
-  active,
   finished,
-}
-
-export enum ActionType {
-  received,
-  failed,
-  start,
 }
 
 export default class Questions {
