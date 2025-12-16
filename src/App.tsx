@@ -4,6 +4,8 @@ import Main from './components/Main';
 import Question from './models/question';
 import { Status } from './providers/questions';
 import Loader from './Loader';
+import ErrorComp from './Error';
+import StartScreen from './components/StartScreen';
 
 const initialState = {
   questions: [] as Question[],
@@ -47,7 +49,16 @@ export default function App() {
   return (
     <div className='app'>
       <Header />
-      <Main>{state.status === Status.loading && <Loader />}</Main>
+      <Main>
+        {state.status === Status.loading && <Loader />}
+        {state.status === Status.error && <ErrorComp />}
+        {state.status === Status.complete && (
+          <StartScreen
+            numOfQuestions={state.questions.length}
+            onStart={() => {}}
+          />
+        )}
+      </Main>
     </div>
   );
 }
