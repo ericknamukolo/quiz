@@ -9,6 +9,14 @@ export enum Status {
   finished,
 }
 
+export enum ActionType {
+  dataReceived,
+  dataFailed,
+  quizStarted,
+  newAnswer,
+  nextQuestion,
+}
+
 export default class Questions {
   static async getQuestions(): Promise<Question[]> {
     try {
