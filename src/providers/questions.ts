@@ -4,6 +4,7 @@ export enum Status {
   initial,
   loading,
   complete,
+  active,
   error,
   finished,
 }
