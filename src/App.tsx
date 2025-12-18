@@ -94,6 +94,9 @@ export default function App() {
             onAnswer={(answer: number) => onAnswered(answer)}
             answer={state.answer}
             onNext={nextQuestion}
+            currentQuestion={state.index + 1}
+            questions={state.questions}
+            score={state.points}
           />
         )}
         {state.status === Status.complete && (
