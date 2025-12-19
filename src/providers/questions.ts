@@ -15,6 +15,8 @@ export enum ActionType {
   quizStarted,
   newAnswer,
   nextQuestion,
+  finished,
+  restart,
 }
 
 export default class Questions {

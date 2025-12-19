@@ -5,6 +5,7 @@ import Options from './Options';
 export default function QuestionComp({
   question,
   onAnswer,
+  onFinish,
   onNext,
   answer,
   currentQuestion,
@@ -14,6 +15,7 @@ export default function QuestionComp({
   question: Question;
   onAnswer: (answer: number) => void;
   onNext: () => void;
+  onFinish: () => void;
   answer: number | null;
   currentQuestion: number;
   questions: Question[];
@@ -34,8 +36,11 @@ export default function QuestionComp({
         answer={answer}
       />
       {answer !== null && (
-        <button className='btn btn-ui' onClick={onNext}>
-          Next
+        <button
+          className='btn btn-ui'
+          onClick={currentQuestion < questions.length ? onNext : onFinish}
+        >
+          {currentQuestion < questions.length ? `Next` : `Finish`}
         </button>
       )}
     </div>

@@ -26,7 +26,7 @@ export default function Progress({
         <strong>{score}</strong> /
         {questions.reduce((total, val) => {
           return total + val.points;
-        }, 0)}
+        }, 0)}{' '}
         points
       </p>
     </header>

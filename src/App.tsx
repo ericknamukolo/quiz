@@ -7,6 +7,7 @@ import Loader from './Loader';
 import ErrorComp from './Error';
 import StartScreen from './components/StartScreen';
 import QuestionComp from './components/question/Question';
+import FinishScreen from './components/FinishScreen';
 
 const initialState = {
   questions: [] as Question[],
@@ -14,6 +15,7 @@ const initialState = {
   index: 0,
   answer: null,
   points: 0,
+  highscore: 0,
 };
 
 function reducer(state: any, action: any) {
@@ -49,6 +51,22 @@ function reducer(state: any, action: any) {
       index: state.index + 1,
       answer: null,
     };
+  } else if (action.type === ActionType.restart) {
+    return {
+      ...state,
+      index: 0,
+      answer: null,
+      status: Status.active,
+    };
+  } else if (action.type === ActionType.finished) {
+    return {
+      ...state,
+      index: 0,
+      answer: null,
+      status: Status.finished,
+      highscore:
+        state.points > state.highscore ? state.points : state.highscore,
+    };
   } else {
     throw new Error('Unknown action type');
   }
@@ -74,6 +92,14 @@ export default function App() {
     dispatch({ type: ActionType.quizStarted });
   }
 
+  function onFinishQuiz() {
+    dispatch({ type: ActionType.finished });
+  }
+
+  function onRestart() {
+    dispatch({ type: ActionType.restart });
+  }
+
   function nextQuestion() {
     dispatch({ type: ActionType.nextQuestion });
   }
@@ -97,12 +123,24 @@ export default function App() {
             currentQuestion={state.index + 1}
             questions={state.questions}
             score={state.points}
+            onFinish={onFinishQuiz}
           />
         )}
         {state.status === Status.complete && (
           <StartScreen
             numOfQuestions={state.questions.length}
             onStart={onStartQuiz}
+          />
+        )}
+
+        {state.status === Status.finished && (
+          <FinishScreen
+            points={state.points}
+            max={state.questions.reduce((total: number, val: Question) => {
+              return total + val.points;
+            }, 0)}
+            highscore={state.highscore}
+            onRestart={onRestart}
           />
         )}
       </Main>
