@@ -1,5 +1,7 @@
 import Question from '../../models/question';
+import Footer from '../Footer';
 import Progress from '../Progress';
+import Timer from '../Timer';
 import Options from './Options';
 
 export default function QuestionComp({
@@ -7,10 +9,12 @@ export default function QuestionComp({
   onAnswer,
   onFinish,
   onNext,
+  onTick,
   answer,
   currentQuestion,
   questions,
   score,
+  seconds,
 }: {
   question: Question;
   onAnswer: (answer: number) => void;
@@ -20,6 +24,8 @@ export default function QuestionComp({
   currentQuestion: number;
   questions: Question[];
   score: number;
+  onTick: () => void;
+  seconds: number;
 }) {
   return (
     <div>
@@ -35,14 +41,18 @@ export default function QuestionComp({
         onAnswer={(answer: number) => onAnswer(answer)}
         answer={answer}
       />
-      {answer !== null && (
-        <button
-          className='btn btn-ui'
-          onClick={currentQuestion < questions.length ? onNext : onFinish}
-        >
-          {currentQuestion < questions.length ? `Next` : `Finish`}
-        </button>
-      )}
+
+      <Footer>
+        <Timer onTick={onTick} seconds={seconds} />
+        {answer !== null && (
+          <button
+            className='btn btn-ui'
+            onClick={currentQuestion < questions.length ? onNext : onFinish}
+          >
+            {currentQuestion < questions.length ? `Next` : `Finish`}
+          </button>
+        )}
+      </Footer>
     </div>
   );
 }

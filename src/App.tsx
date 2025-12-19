@@ -16,6 +16,7 @@ const initialState = {
   answer: null,
   points: 0,
   highscore: 0,
+  secondsRemaining: 500,
 };
 
 function reducer(state: any, action: any) {
@@ -58,6 +59,12 @@ function reducer(state: any, action: any) {
       answer: null,
       status: Status.active,
     };
+  } else if (action.type === ActionType.tick) {
+    return {
+      ...state,
+      secondsRemaining: state.secondsRemaining - 1,
+      status: state.secondsRemaining <= 0 ? Status.finished : Status.active,
+    };
   } else if (action.type === ActionType.finished) {
     return {
       ...state,
@@ -92,6 +99,10 @@ export default function App() {
     dispatch({ type: ActionType.quizStarted });
   }
 
+  function tick() {
+    dispatch({ type: ActionType.tick });
+  }
+
   function onFinishQuiz() {
     dispatch({ type: ActionType.finished });
   }
@@ -116,6 +127,8 @@ export default function App() {
         {state.status === Status.error && <ErrorComp />}
         {state.status === Status.active && (
           <QuestionComp
+            seconds={state.secondsRemaining}
+            onTick={tick}
             question={state.questions[state.index]}
             onAnswer={(answer: number) => onAnswered(answer)}
             answer={state.answer}

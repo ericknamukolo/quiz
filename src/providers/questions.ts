@@ -17,6 +17,7 @@ export enum ActionType {
   nextQuestion,
   finished,
   restart,
+  tick,
 }
 
 export default class Questions {
