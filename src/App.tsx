@@ -58,6 +58,7 @@ function reducer(state: any, action: any) {
       index: 0,
       answer: null,
       status: Status.active,
+      secondsRemaining: 500,
     };
   } else if (action.type === ActionType.tick) {
     return {

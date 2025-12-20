@@ -19,7 +19,7 @@ export default function Timer({
   return (
     <div className='timer'>
       {mins < 10 && '0'}
-      {mins} : {secs}
+      {mins} m : {secs < 10 && '0'} {secs} s
     </div>
   );
 }
